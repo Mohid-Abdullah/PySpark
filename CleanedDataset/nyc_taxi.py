@@ -3,6 +3,9 @@ from pyspark.sql.functions import col, sum, when
 
 spark = SparkSession.builder.appName("NYC").master("local[*]").getOrCreate()
 
+#link to the dataset
+#"https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2023-01.parquet"
+
 df = spark.read.parquet(r"CleanDatasets\nyc.parquet", header=True, inferSchema=True)
 df.show(5)
 df.printSchema()
