@@ -19,13 +19,18 @@ raw_data = [
 raw_df = spark.createDataFrame(raw_data)
 raw_df.show()
 
-raw_df.write.mode("overwrite").json("CleanDatasets/Cleaned/bronze/user_logins")
+raw_df.write.mode("overwrite").json("CleanDatasets/Cleaned/raw/user_logins")
 
-# Read from bronze
-bronze_df = spark.read.json("CleanDatasets/Cleaned/bronze/user_logins")
+# Read from raw to bronze
+bronze_df = spark.read.json("CleanDatasets/Cleaned/raw/user_logins")
+
+bronze_df.write.mode("overwrite").parquet("CleanDatasets/Cleaned/bronze/user_logins")
+
+#bronze to silver
+silver_data = spark.read.parquet("CleanDatasets/Cleaned/bronze/user_logins")
 
 silver_df = (
-    bronze_df
+    silver_data
     .filter(col("user_id").isNotNull())
     .filter(col("location").isNotNull())
     .withColumn("login_time", try_to_timestamp("login_time"))
@@ -38,7 +43,7 @@ silver_df = (
 
 silver_df.write.mode("overwrite").parquet("CleanDatasets/Cleaned/silver/user_logins_cleaned")
 
-
+#conversion to buisness view or gold layer
 silver_df = spark.read.parquet("CleanDatasets/Cleaned/silver/user_logins_cleaned")
 
 gold_df = silver_df.groupBy("user_id", "location").agg(
