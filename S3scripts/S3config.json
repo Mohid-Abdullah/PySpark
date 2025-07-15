@@ -1,0 +1,19 @@
+{
+    "EmpCsvReadAddress": "s3a://raw/Emp_Csv.csv",
+    "EmpJsonReadAddress": "s3a://raw/Emp_Json.json",
+    "DepCsvReadAddress": "s3a://raw/Dept_Csv.csv",
+    "EmpWriteAddress": "s3a://bronze/Emp",
+    "DepWriteAddress": "s3a://bronze/Dept",
+    "format": "delta",
+    "mode": "overwrite",
+    "options": {
+        "header": "true"
+    },
+    "options2": {
+        "header": "true",
+        "inferSchema": "true"
+    },
+    "SilverEmpWriteAddress": "s3a://silver/Emp",
+    "SilverDepWriteAddress": "s3a://silver/Dept",
+    "GoldAddress": "s3a://gold/"
+  }
